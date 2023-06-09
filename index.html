@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        /* Estilos omitidos para maior clareza */
+    </style>
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <select id="matrizSelect" onchange="onChangeSelect('matrizSelect')">
+            <option value="">Selecione a matriz</option>
+            <option value="1">Matriz 1</option>
+            <option value="2">Matriz 2</option>
+        </select>
+
+        <select id="clienteSelect" onchange="onChangeSelect('clienteSelect')">
+            <option value="">Selecione o cliente</option>
+            <option value="1" data-matriz="1">Cliente 1</option>
+            <option value="2" data-matriz="2">Cliente 2</option>
+        </select>
+
+        <select id="unidadeSelect" onchange="onChangeSelect('unidadeSelect')">
+            <option value="">Selecione a unidade</option>
+            <option value="1" data-cliente="1">Unidade 1</option>
+            <option value="2" data-cliente="1">Unidade 2</option>
+            <option value="3" data-cliente="2">Unidade 3</option>
+        </select>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        function onChangeSelect(selectId) {
+            const selectedMatriz = document.getElementById('matrizSelect').value;
+            const selectedCliente = document.getElementById('clienteSelect').value;
+            const selectedUnidade = document.getElementById('unidadeSelect').value;
+
+            // Emitir evento para cada sala com base nas opções selecionadas
+            if (selectedMatriz) {
+                const matrizRoom = 'matriz-' + selectedMatriz;
+                socket.emit('mensagem', 'sala-matriz', 'Mensagem para sala do mnatriz');
+            //    socket.to('sala-matriz').emit('mensagem','Mensagem para sala da matriz');
+            }
+
+            if (selectedCliente) {
+                const clienteRoom = 'cliente-' + selectedCliente;
+                socket.emit('mensagem', clienteRoom, 'Mensagem para sala do cliente');
+            }
+
+            if (selectedUnidade) {
+                const unidadeRoom = 'unidade-' + selectedUnidade;
+                socket.emit('mensagem', unidadeRoom, 'Mensagem para sala da unidade');
+            }
+        }
+
+        
+
+        socket.on("novaMensagem", message =>{
+            console.log(message)
+        })
+    </script>
+</body>
+
+</html>
